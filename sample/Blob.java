@@ -1,0 +1,67 @@
+package sample;
+
+import com.sun.javafx.iio.common.ScalerFactory;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+
+import javax.swing.*;
+import org.opencv.core.Point;;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import static java.lang.Math.sqrt;
+
+public class Blob {
+
+    public Scalar colorID;
+
+    private ArrayList<Point> locationHistory = new ArrayList<Point>();
+    int activationTime = 12;
+
+
+    public void addLocation (Point newLocation) {
+
+        locationHistory.add(newLocation);
+        activationTime = 12;
+    }
+
+    public double checkDistance (Point otherLocation) {
+        Point pointA = otherLocation;
+        Point pointB = locationHistory.get(locationHistory.size()-1);
+        Point dist = new Point(pointA.x-pointB.x,pointA.y-pointB.y);
+        double distance = sqrt(dist.x * dist.x + dist.y * dist.y);
+        return distance;
+    }
+
+    public void update() {
+        activationTime --;
+    }
+
+    public boolean isActive(){
+        return activationTime > 0;
+    }
+
+    public void draw(Mat image){
+
+        Scalar color;
+
+        if(isActive()){
+             color = colorID;
+        }
+        else {
+            color = new Scalar(255,180,180);
+        }
+
+        Point previous = locationHistory.get(0);
+
+        for (Point l : locationHistory){
+
+            Imgproc.line(image,previous,l,color,3, Imgproc.LINE_AA,0);
+            previous = l;
+        }
+
+    }
+}
