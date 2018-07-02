@@ -32,7 +32,6 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-
             <ImageView fx:id="canvas" fitHeight="360.0" fitWidth="640.0" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
            <ImageView fx:id="canvas1" blendMode="ADD" fitHeight="360.0" fitWidth="640.0" opacity="0.5" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <ImageView fx:id="canvas2" fitHeight="360.0" fitWidth="640.0" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
@@ -50,8 +49,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-         <children>
-            <Label fx:id="labelSliderBlur" text="Blur" translateX="20.0" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
+       <children>
+        <Label fx:id="labelSliderBlur" text="Blur" translateX="20.0" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
              <TextField fx:id="blurValue" maxWidth="50.0" translateX="50.0" GridPane.columnIndex="0" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
             <Slider fx:id="sliderBlur" maxWidth="500.0" GridPane.columnIndex="0" GridPane.halignment="RIGHT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />
             <Label fx:id="labelSliderThresh" text="Threshold" translateX="20.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="0" GridPane.valignment="CENTER" />

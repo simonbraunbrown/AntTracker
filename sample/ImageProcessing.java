@@ -11,7 +11,7 @@ import org.opencv.video.Video;
 
 public class ImageProcessing {
 
-    BackgroundSubtractorMOG2 mog2 = Video.createBackgroundSubtractorMOG2(500,100,false);
+    BackgroundSubtractorMOG2 mog2 = Video.createBackgroundSubtractorMOG2(30,100,false);
 
 
     public Mat Blur (Mat inputMat, double blurValue) {

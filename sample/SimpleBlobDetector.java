@@ -24,7 +24,7 @@ public class SimpleBlobDetector {
         double avarageX = 0.0;
         double avarageY = 0.0;
 
-        if (pointList.size()> 100 && pointList.size() < 250) {
+        if (pointList.size()> 50 && pointList.size() < 250) {
             for (int j = 0; j < pointList.size(); j++) {
                 Point point = pointList.get(j);
                 avarageX = avarageX + point.x;
@@ -42,7 +42,10 @@ public class SimpleBlobDetector {
 
         return centers;
 
+
+
     }
+
 
 
 }

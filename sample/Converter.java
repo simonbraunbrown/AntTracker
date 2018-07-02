@@ -10,6 +10,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 
+import static org.opencv.videoio.Videoio.CV_CAP_PROP_BUFFERSIZE;
+
 public class Converter {
 
     public static Image mat2Image(Mat frame)

@@ -8,13 +8,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.sun.media.jfxmedia.events.BufferListener;
+import com.sun.media.jfxmedia.events.VideoRendererListener;
+import com.sun.media.jfxmedia.events.VideoTrackSizeListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.video.Video;
 import org.opencv.videoio.VideoCapture;
 
 import sample.Converter;
@@ -26,6 +31,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import static org.opencv.core.CvType.*;
+import static org.opencv.videoio.Videoio.*;
 
 
 public class Controller {
@@ -116,10 +122,12 @@ public class Controller {
             this.videoStream.open("src/ants.mov");
             //this.videoStream.open(cameraId);
 
-
             if (this.videoStream.isOpened()) {
 
                 this.cameraActive = true;
+
+
+
 
 
                 //grab a Frame every 33 ms
@@ -131,8 +139,11 @@ public class Controller {
                         Mat frame = grabFrame();
                         Mat drawLines = new Mat(frame.rows(),frame.cols(),CV_8UC3, new Scalar(0,0,0));
 
+
                         if (!frameGrabbed) {
                             frameGrabbed = true;
+
+
                         }
 
 
@@ -146,6 +157,7 @@ public class Controller {
                         for (int i = 0; i < centerPoints.size(); i++ ) {
 
                             Imgproc.circle(drawLines,centerPoints.get(i),15,new Scalar(255,255,0),2);
+
 
                         }
 
@@ -228,6 +240,20 @@ public class Controller {
 
                         //System.out.println("Blur " + Double.toString(sliderBlur.getValue()) + "      Thresh " + Double.toString(sliderThresh.getValue()));
 
+                        //LOOP the video
+
+                        double totalFrames = videoStream.get(CV_CAP_PROP_FRAME_COUNT);
+                        double framesPos = videoStream.get(CV_CAP_PROP_POS_FRAMES);
+                        //System.out.println(Double.toString(totalFrames));
+
+                    if ( totalFrames - 500.0 == framesPos) {
+
+                        videoStream.set(CV_CAP_PROP_POS_FRAMES,0.0);
+                        blobs.clear();
+
+
+                        }
+
 
                     }
                 };
@@ -272,6 +298,8 @@ public class Controller {
                     //Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
                 }
 
+
+
             }
             catch (Exception e)
             {
@@ -304,6 +332,7 @@ public class Controller {
         {
             // release the camera
             this.videoStream.release();
+
         }
     }
 
