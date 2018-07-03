@@ -133,7 +133,7 @@ public class Controller {
 
                         //grab a single frame
                         Mat frame = grabFrame();
-                        Mat drawLines = new Mat(frame.rows(),frame.cols(),CV_8UC3, new Scalar(0,0,0)); // Mat for the Lines with the same size of the video image
+                        Mat drawLines = new Mat(frame.rows(),frame.cols(),CV_8UC3, new Scalar(0,0,0)); // Mat for the Lines image with the same size of the video image
 
 
                         if (!frameGrabbed) {
@@ -201,9 +201,6 @@ public class Controller {
 
                         // update the UI
 
-
-
-
                         blurValue.setText(df.format(sliderBlur.getValue()));
                         threshValue.setText(df.format(sliderThresh.getValue()));
 
@@ -227,7 +224,8 @@ public class Controller {
                         double totalFrames = videoStream.get(CV_CAP_PROP_FRAME_COUNT);
                         double framesPos = videoStream.get(CV_CAP_PROP_POS_FRAMES);
 
-                        //System.out.println(Double.toString(totalFrames));
+
+                        //System.out.println(Double.toString(framesPos));
 
                     if ( totalFrames - 500.0 == framesPos) {
 

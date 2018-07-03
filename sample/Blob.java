@@ -18,6 +18,7 @@ public class Blob {
     int activationTime = 12;
 
 
+
     public void addLocation (Point newLocation) {
 
         locationHistory.add(newLocation);
@@ -52,12 +53,15 @@ public class Blob {
         }
 
         Point previous = locationHistory.get(0);
+        Point first = previous.clone();
+        Point last = locationHistory.get(locationHistory.size()-1);
 
         for (Point l : locationHistory){
 
             Imgproc.line(image,previous,l,color,3, Imgproc.LINE_AA,0);
             previous = l;
-        }
 
+        }
+        //Imgproc.line(image,first,last, new Scalar(0,255,0),2); //Kine from start to end
     }
 }
