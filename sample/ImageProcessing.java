@@ -14,29 +14,6 @@ public class ImageProcessing {
     BackgroundSubtractorMOG2 mog2 = Video.createBackgroundSubtractorMOG2(30,100,false);
 
 
-    public Mat Blur (Mat inputMat, double blurValue) {
-
-        Mat outputMat = new Mat();
-
-        Imgproc.cvtColor(inputMat, outputMat, Imgproc.COLOR_BGR2GRAY);
-        Imgproc.blur(outputMat,outputMat, new Size(blurValue,blurValue));
-        //Imgproc.threshold(inputMat,outputMat,blurValue,255,0);
-
-
-        return outputMat;
-
-    }
-    public Mat Thresh (Mat inputMat, double threshValue) {
-
-        Mat outputMat = new Mat();
-
-
-        Imgproc.threshold(inputMat,outputMat,threshValue,255,1);
-
-
-        return outputMat;
-
-    }
 
     public Mat backroundSubtraction (Mat input, double blurValue, double threshValue) {
 

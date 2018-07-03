@@ -2,33 +2,26 @@ package sample;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.sun.media.jfxmedia.events.BufferListener;
-import com.sun.media.jfxmedia.events.VideoRendererListener;
-import com.sun.media.jfxmedia.events.VideoTrackSizeListener;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import org.opencv.core.Core;
+
+
+import javafx.scene.control.*;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.video.Video;
 import org.opencv.videoio.VideoCapture;
 
-import sample.Converter;
-import javafx.event.ActionEvent;
-import sample.ImageProcessing;
+
+
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+
 
 import static org.opencv.core.CvType.*;
 import static org.opencv.videoio.Videoio.*;
@@ -72,25 +65,23 @@ public class Controller {
 
 
 
+
+
+
+
     private ScheduledExecutorService timer;
 
     private VideoCapture videoStream;
 
-    private boolean cameraActive = false;
-
-    private static int cameraId = 0;
-
-    private static String AntVideo = "src/sampleants.mp4";
-
+    private boolean videoActive = false;
 
     private boolean frameGrabbed = false;
 
     private DecimalFormat df = new DecimalFormat("#.#");
 
-    private List<Point>  pointsToDraw = new ArrayList<Point>();
-
     private  ArrayList<Blob> blobs = new ArrayList<Blob>();
 
+    private static String AntVideo = "src/ants.mov";
 
 
 
@@ -108,6 +99,10 @@ public class Controller {
         sliderThresh.setMax(255);
         sliderThresh.setValue(100);
 
+        canvas.setFitWidth(640);    //Image for the video
+        canvas1.setFitWidth(640);   //Image for the lines
+        canvas1.setOpacity(0.5);    // set opacity for overlaying video image
+        canvas2.setFitWidth(640);   //Debug Image
 
 
     }
@@ -116,15 +111,16 @@ public class Controller {
     @FXML
     protected void startStream(javafx.event.ActionEvent actionEvent) {
 
-        if (!this.cameraActive) {
+        if (!this.videoActive) {
 
-            //start captureing
-            this.videoStream.open("src/ants.mov");
-            //this.videoStream.open(cameraId);
+            //start reading the video
+            this.videoStream.open(AntVideo);
+
 
             if (this.videoStream.isOpened()) {
 
-                this.cameraActive = true;
+                this.videoActive = true;
+
 
 
 
@@ -137,7 +133,7 @@ public class Controller {
 
                         //grab a single frame
                         Mat frame = grabFrame();
-                        Mat drawLines = new Mat(frame.rows(),frame.cols(),CV_8UC3, new Scalar(0,0,0));
+                        Mat drawLines = new Mat(frame.rows(),frame.cols(),CV_8UC3, new Scalar(0,0,0)); // Mat for the Lines with the same size of the video image
 
 
                         if (!frameGrabbed) {
@@ -147,12 +143,10 @@ public class Controller {
                         }
 
 
-                       //Mat bluredframe = imageProcessor.Blur(frame, sliderBlur.getValue());
-                       //Mat threshedframe = imageProcessor.Thresh(bluredframe, sliderThresh.getValue());
                        Mat subtractedBackground = imageProcessor.backroundSubtraction(frame,sliderBlur.getValue(),sliderThresh.getValue());
 
                        // draw center Points
-                        ArrayList<Point> centerPoints =  detector.detectCenterPoints(subtractedBackground);
+                        ArrayList<Point> centerPoints =  detector.detectCenterPoints(subtractedBackground); // save center points after detecting the blobs and calculated the centers
 
                         for (int i = 0; i < centerPoints.size(); i++ ) {
 
@@ -204,37 +198,25 @@ public class Controller {
 
                         Imgproc.putText(frame, "detected Ants: " + antCount,new Point(10, frame.height()-10),50, frame.width()/640,new Scalar(0,0,0),2,Imgproc.LINE_4,false );
 
-                       /* for (int i = 0; i < pointsToDraw.size(); i++ ) {
 
-                            Imgproc.circle(frame,pointsToDraw.get(i),1,new Scalar(0,255,0),1);
+                        // update the UI
 
-
-
-                        }
-
-
-
-                        pointsToDraw.addAll(centerPoints);
-
-                        if(pointsToDraw.size()>5000) {
-                           pointsToDraw = pointsToDraw.subList(pointsToDraw.size()-5000, pointsToDraw.size()-1);
-                        }
-
-                        */
 
 
 
                         blurValue.setText(df.format(sliderBlur.getValue()));
                         threshValue.setText(df.format(sliderThresh.getValue()));
 
+
                         //convert and show the frame
                         Image imageToShow = Converter.mat2Image(frame);
-                        Image imageToShowBehind = Converter.mat2Image(drawLines);
+                        Image imageToShowOverlay = Converter.mat2Image(drawLines);
                         Image imageDebug = Converter.mat2Image(subtractedBackground);
 
 
+
                         updateImageView(canvas, imageToShow);
-                        updateImageView(canvas1, imageToShowBehind);
+                        updateImageView(canvas1, imageToShowOverlay);
                         updateImageView(canvas2, imageDebug);
 
 
@@ -244,6 +226,7 @@ public class Controller {
 
                         double totalFrames = videoStream.get(CV_CAP_PROP_FRAME_COUNT);
                         double framesPos = videoStream.get(CV_CAP_PROP_POS_FRAMES);
+
                         //System.out.println(Double.toString(totalFrames));
 
                     if ( totalFrames - 500.0 == framesPos) {
@@ -270,7 +253,7 @@ public class Controller {
         } else {
 
             // the camera is not active at this point
-            this.cameraActive = false;
+            this.videoActive = false;
             // update again the button content
             this.startbtn.setText("Start Video");
 
